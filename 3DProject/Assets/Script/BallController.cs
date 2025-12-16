@@ -11,7 +11,7 @@ public class BallController : MonoBehaviour
     [SerializeField] private float jumpForce ;
     [SerializeField] private float downForce;
     [SerializeField] private bool salto;
-
+    
     private Vector2 inputMovement;
     private Vector2 inputJump;
     public Vector3 direction;
@@ -41,9 +41,12 @@ public class BallController : MonoBehaviour
 
         //rb.AddForce(jumpt * inputJump, ForceMode.Impulse);
 
-       
-            
+
+        if (salto == true)
+        {
             Move();
+        }
+            
         
     }
 

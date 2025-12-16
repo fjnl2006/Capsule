@@ -1,40 +1,57 @@
 using UnityEngine;
+using System.Collections;
 
 public class QuitarPlattaform : MonoBehaviour
 {
-    [SerializeField] private int contador = 1;
+    [Header("Tiempos")]
+    [Tooltip("Tiempo que tarda en caerse desde que la tocas")]
+    [SerializeField] private float tiempoAntesDeDesaparecer = 2.0f; 
+    
+    [Tooltip("Tiempo que tarda en volver a aparecer")]
+    [SerializeField] private float tiempoParaReaparecer = 5.0f;
 
-    [SerializeField] private int tiempoTotal = 680;
     
-    [SerializeField] private int ticks = 5;
+    private MeshRenderer miRenderer;
+    private Collider miCollider;
     
+ 
+    private bool enProceso = false;
 
-    private int tiempoRestar = 680;
-    
-    
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+       
+        miRenderer = GetComponent<MeshRenderer>();
+        miCollider = GetComponent<Collider>();
     }
 
-    // Update is called once per frame
-    void Update()
-    { 
-        
-        
-            Debug.Log(contador);
-            if (contador == tiempoTotal)
-            {
-                
-                Destroy(this.gameObject);
-            }
-
-            contador = 1 + contador / ticks;
-        
-        
+    private void OnCollisionEnter(Collision collision)
+    {
+       
+        if (collision.gameObject.CompareTag("Player") && !enProceso)
+        {
+            StartCoroutine(CicloDesaparicion());
+        }
     }
 
+    IEnumerator CicloDesaparicion()
+    {
+        enProceso = true;
+
+       
+        yield return new WaitForSeconds(tiempoAntesDeDesaparecer);
+
+       
+        miRenderer.enabled = false;
+        miCollider.enabled = false;
+
+       
+        yield return new WaitForSeconds(tiempoParaReaparecer);
+
+        
+        miRenderer.enabled = true;
+        miCollider.enabled = true;
+        
+        enProceso = false;
+    }
     
 }
